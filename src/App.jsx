@@ -69,8 +69,17 @@ export default function App() {
                     Input a transaction hash to see the meme associated with it.
                 </div>
 
-                {/* If the user has not connected their wallet, display the connect wallet button */}
-                {!currentAccount && (
+                {/*
+                  If the user has not connected their wallet, display the connect wallet button.
+                  Otherwise, display their wallet address.
+                */}
+                {currentAccount ? (
+                    <div className="account">
+                        {currentAccount.slice(0, 6)}...
+                        {currentAccount.slice(-4)}
+                        {/* {currentAccount} */}
+                    </div>
+                ) : (
                     <button className="connectButton" onClick={connectWallet}>
                         Connect Wallet
                     </button>

@@ -33,3 +33,32 @@ main {
     font-weight: bold;
     background-image: linear-gradient(144deg, #509624, #20672c);
 }
+
+/* Account box matching with the Replit badge */
+.account {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    margin: 16px;
+    padding: 10px;
+    border: 0;
+    border-radius: 5px;
+    z-index: 1000;
+
+    color: #f5f9fc;
+    font-weight: bold;
+    cursor: pointer;
+
+    opacity: 0.5;
+    background-color: #00a11b;
+
+    transition-property: opacity, transform;
+    transition: opacity 120ms, transform 120ms;
+    transition-timing-function: ease-out;
+}
+
+.account:hover {
+    transform: scale(1.05);
+    opacity: 1;
+}
