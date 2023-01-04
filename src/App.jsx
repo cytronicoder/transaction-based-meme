@@ -80,9 +80,25 @@ export default function App() {
                         {/* {currentAccount} */}
                     </div>
                 ) : (
-                    <button className="connectButton" onClick={connectWallet}>
+                    <button className="button" onClick={connectWallet}>
                         Connect Wallet
                     </button>
+                )}
+
+                {/* Input field for transaction hash once wallet is connected 
+                TODO: Add CSS to make this look better
+                */}
+                {currentAccount ? (
+                    <div className="inputContainer">
+                        <input
+                            className="input"
+                            type="text"
+                            placeholder="Enter transaction hash"
+                        />
+                        <button className="button">Submit</button>
+                    </div>
+                ) : (
+                    <div></div> // Empty div - we can add a message here later explaining the purpose of the dApp
                 )}
             </div>
         </main>
