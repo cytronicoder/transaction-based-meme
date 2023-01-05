@@ -5,6 +5,12 @@ export default function App() {
     const [loggedAddress, setLoggedAddress] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState("");
 
+    /**
+     * This is a secret key that allows us to access Etherscan's API.
+     * From https://vitejs.dev/guide/env-and-mode.html
+     */
+    const etherscan_api_key = import.meta.env.VITE_ETHERSCAN_API_KEY;
+
     // This function monitors if the user has updated the input field
     const onInputChange = (e) => {
         console.log(e.target.value);
