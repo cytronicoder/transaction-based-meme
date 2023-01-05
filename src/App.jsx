@@ -3,6 +3,13 @@ import "./App.css";
 
 export default function App() {
     const [currentAccount, setCurrentAccount] = useState(null);
+    const [transactionHash, setTransactionHash] = useState("");
+
+    // This function monitors if the user has updated the input field
+    const onInputChange = (e) => {
+        console.log(e.target.value);
+        setTransactionHash(e.target.value);
+    };
 
     /**
      * This function does a few things:
@@ -55,6 +62,14 @@ export default function App() {
             .catch((err) => console.log(err));
     };
 
+    /**
+     * This function searches for a transaction hash in Etherscan
+     * TODO: Implement this function
+     */
+    const searchTransaction = () => {
+        console.log("Searching for transaction hash:", transactionHash);
+    };
+
     // Whenever the page loads, check to see if the user has connected their wallet
     useEffect(() => {
         checkIfWalletIsConnected();
@@ -88,17 +103,21 @@ export default function App() {
                 {/* Input field for transaction hash once wallet is connected 
                 TODO: Add CSS to make this look better
                 */}
-                {currentAccount ? (
+                {currentAccount && (
                     <div className="inputContainer">
                         <input
                             className="input"
                             type="text"
                             placeholder="Enter transaction hash"
+                            onChange={onInputChange}
                         />
-                        <button className="button">Submit</button>
+                        <button
+                            className="submitButton"
+                            onClick={searchTransaction}
+                        >
+                            Search
+                        </button>
                     </div>
-                ) : (
-                    <div></div> // Empty div - we can add a message here later explaining the purpose of the dApp
                 )}
             </div>
         </main>
