@@ -135,7 +135,7 @@ export default function App() {
                                             <th>Block Number</th>
                                             <th>From</th>
                                             <th>To</th>
-                                            <th>Value</th>
+                                            <th>Value (ETH)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
