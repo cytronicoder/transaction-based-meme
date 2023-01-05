@@ -140,24 +140,27 @@ export default function App() {
                                     </thead>
                                     <tbody>
                                         {/* get the first 5 */}
-                                        {etherscanData.result.slice(0, 5).map((tx) => (
-                                            <tr key={tx.hash}>
-                                                <td>{tx.blockNumber}</td>
-                                                <td>
-                                                    {tx.from.slice(0, 6)}...
-                                                    {tx.from.slice(-4)}
-                                                </td>
-                                                <td>
-                                                    {tx.to.slice(0, 6)}...
-                                                    {tx.to.slice(-4)}
-                                                </td>
-                                                <td>
-                                                    {parseFloat(
-                                                        tx.value / 1000000000000000000
-                                                    ).toFixed(4)}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {etherscanData.result
+                                            .slice(0, 5)
+                                            .map((tx) => (
+                                                <tr key={tx.hash}>
+                                                    <td>{tx.blockNumber}</td>
+                                                    <td>
+                                                        {tx.from.slice(0, 6)}...
+                                                        {tx.from.slice(-4)}
+                                                    </td>
+                                                    <td>
+                                                        {tx.to.slice(0, 6)}...
+                                                        {tx.to.slice(-4)}
+                                                    </td>
+                                                    <td>
+                                                        {parseFloat(
+                                                            tx.value /
+                                                                1000000000000000000
+                                                        ).toFixed(4)}
+                                                    </td>
+                                                </tr>
+                                            ))}
                                     </tbody>
                                 </table>
                             </div>
