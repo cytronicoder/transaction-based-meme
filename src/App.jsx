@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 export default function App() {
-    const [currentAccount, setCurrentAccount] = useState(null);
-    const [transactionHash, setTransactionHash] = useState("");
+    const [loggedAddress, setLoggedAddress] = useState(null);
+    const [selectedAddress, setSelectedAddress] = useState("");
 
     // This function monitors if the user has updated the input field
     const onInputChange = (e) => {
         console.log(e.target.value);
-        setTransactionHash(e.target.value);
+        setSelectedAddress(e.target.value);
     };
 
     /**
@@ -33,7 +33,7 @@ export default function App() {
             if (accounts.length !== 0) {
                 const account = accounts[0];
                 console.log("👛", account);
-                setCurrentAccount(account);
+                setLoggedAddress(account);
             } else {
                 console.log(
                     "🤔 No authorized account found. You need to connect your Metamask wallet."
@@ -57,7 +57,7 @@ export default function App() {
             .request({ method: "eth_requestAccounts" })
             .then((accounts) => {
                 console.log("Connected", accounts[0]);
-                setCurrentAccount(accounts[0]);
+                setLoggedAddress(accounts[0]);
             })
             .catch((err) => console.log(err));
     };
@@ -67,7 +67,7 @@ export default function App() {
      * TODO: Implement this function
      */
     const searchTransaction = () => {
-        console.log("Searching for transaction hash:", transactionHash);
+        console.log("Searching for transaction hash:", selectedAddress);
     };
 
     // Whenever the page loads, check to see if the user has connected their wallet
@@ -88,11 +88,11 @@ export default function App() {
                   If the user has not connected their wallet, display the connect wallet button.
                   Otherwise, display their wallet address.
                 */}
-                {currentAccount ? (
+                {loggedAddress ? (
                     <div className="account">
-                        {currentAccount.slice(0, 6)}...
-                        {currentAccount.slice(-4)}
-                        {/* {currentAccount} */}
+                        {loggedAddress.slice(0, 6)}...
+                        {loggedAddress.slice(-4)}
+                        {/* {loggedAddress} */}
                     </div>
                 ) : (
                     <button className="button" onClick={connectWallet}>
@@ -103,7 +103,7 @@ export default function App() {
                 {/* Input field for transaction hash once wallet is connected 
                 TODO: Add CSS to make this look better
                 */}
-                {currentAccount && (
+                {loggedAddress && (
                     <div className="inputContainer">
                         <input
                             className="input"
