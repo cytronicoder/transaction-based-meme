@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import "./TransactionTable.css";
+import "./Transactions.css";
 
-export default function TransactionTable({ addr }) {
+export default function Transactions({ addr }) {
+    const [selectedAddress, setSelectedAddress] = useState("");
     const [etherscanData, setEtherscanData] = useState(null);
+
+    // This function monitors if the user has updated the input field
+    const onInputChange = (e) => {
+        console.log(e.target.value);
+        setSelectedAddress(e.target.value);
+    };
 
     /**
      * This is a secret key that allows us to access Etherscan's API.
@@ -26,7 +33,21 @@ export default function TransactionTable({ addr }) {
     };
 
     return (
-        etherscanData && (
+        <>
+            {/* Input field for transaction hash once wallet is connected */}
+            <div className="inputContainer">
+                <input
+                    className="input"
+                    type="text"
+                    placeholder="Enter transaction hash"
+                    onChange={onInputChange}
+                />
+                <button className="submitButton" onClick={searchTransaction}>
+                    Search
+                </button>
+            </div>
+            
+            etherscanData && (
             <div className="tableContainer">
                 <table className="table">
                     <thead>
@@ -60,6 +81,7 @@ export default function TransactionTable({ addr }) {
                     </tbody>
                 </table>
             </div>
-        )
+            )
+        </>
     );
 }

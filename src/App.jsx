@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
-import "../components/TransactionTable";
+import "../components/Transactions";
 
 export default function App() {
     const [loggedAddress, setLoggedAddress] = useState(null);
-    const [selectedAddress, setSelectedAddress] = useState("");
-    const [etherscanData, setEtherscanData] = useState(null);
-
-    // This function monitors if the user has updated the input field
-    const onInputChange = (e) => {
-        console.log(e.target.value);
-        setSelectedAddress(e.target.value);
-    };
 
     /**
      * This function does a few things:
@@ -91,24 +83,8 @@ export default function App() {
                             {/* {loggedAddress} */}
                         </div>
 
-                        {/* Input field for transaction hash once wallet is connected */}
-                        <div className="inputContainer">
-                            <input
-                                className="input"
-                                type="text"
-                                placeholder="Enter transaction hash"
-                                onChange={onInputChange}
-                            />
-                            <button
-                                className="submitButton"
-                                onClick={searchTransaction}
-                            >
-                                Search
-                            </button>
-                        </div>
-
-                        {/* Display transactions in a table */}
-                        <TransactionTable addr={selectedAddress} />
+                        {/* Transactions search */}
+                        <Transactions />
 
                         {/* Display memes based on transaction hash */}
                     </>
