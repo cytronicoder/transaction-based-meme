@@ -15,7 +15,7 @@ export default function TransactionTable({ addr }) {
      * and sets the meme based on the result
      */
     const searchTransaction = () => {
-        console.log("Searching for transaction hash: ", selectedAddress);
+        console.log("Searching for transaction hash: ", addr);
 
         // Returns the list of transactions performed by an address
         const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${selectedAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${etherscan_api_key}`;
