@@ -89,7 +89,7 @@ export default function App() {
                         {/* Display memes based on transaction hash */}
                     </>
                 ) : (
-                    <button className="connectButton" onClick={connectWallet}>
+                    <button className="button" onClick={connectWallet}>
                         Connect Wallet
                     </button>
                 )}
