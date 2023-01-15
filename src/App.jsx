@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+import "../components/Transactions";
+
 export default function App() {
-    const [currentAccount, setCurrentAccount] = useState(null);
+    const [loggedAddress, setLoggedAddress] = useState(null);
 
     /**
      * This function does a few things:
@@ -26,7 +28,7 @@ export default function App() {
             if (accounts.length !== 0) {
                 const account = accounts[0];
                 console.log("👛", account);
-                setCurrentAccount(account);
+                setLoggedAddress(account);
             } else {
                 console.log(
                     "🤔 No authorized account found. You need to connect your Metamask wallet."
@@ -50,7 +52,7 @@ export default function App() {
             .request({ method: "eth_requestAccounts" })
             .then((accounts) => {
                 console.log("Connected", accounts[0]);
-                setCurrentAccount(accounts[0]);
+                setLoggedAddress(accounts[0]);
             })
             .catch((err) => console.log(err));
     };
@@ -73,32 +75,23 @@ export default function App() {
                   If the user has not connected their wallet, display the connect wallet button.
                   Otherwise, display their wallet address.
                 */}
-                {currentAccount ? (
-                    <div className="account">
-                        {currentAccount.slice(0, 6)}...
-                        {currentAccount.slice(-4)}
-                        {/* {currentAccount} */}
-                    </div>
+                {loggedAddress ? (
+                    <>
+                        <div className="account">
+                            {loggedAddress.slice(0, 6)}...
+                            {loggedAddress.slice(-4)}
+                            {/* {loggedAddress} */}
+                        </div>
+
+                        {/* Transactions search */}
+                        <Transactions />
+
+                        {/* Display memes based on transaction hash */}
+                    </>
                 ) : (
                     <button className="connectButton" onClick={connectWallet}>
                         Connect Wallet
                     </button>
-                )}
-
-                {/* Input field for transaction hash once wallet is connected 
-                TODO: Add CSS to make this look better
-                */}
-                {currentAccount ? (
-                    <div className="inputContainer">
-                        <input
-                            className="input"
-                            type="text"
-                            placeholder="Enter transaction hash"
-                        />
-                        <button className="button">Submit</button>
-                    </div>
-                ) : (
-                    <div></div> // Empty div - we can add a message here later explaining the purpose of the dApp
                 )}
             </div>
         </main>
