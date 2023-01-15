@@ -80,7 +80,7 @@ export default function App() {
                         {/* {currentAccount} */}
                     </div>
                 ) : (
-                    <button className="button" onClick={connectWallet}>
+                    <button className="connectButton" onClick={connectWallet}>
                         Connect Wallet
                     </button>
                 )}
