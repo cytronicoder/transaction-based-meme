@@ -4,7 +4,6 @@ import "./App.css";
 export default function App() {
     const [loggedAddress, setLoggedAddress] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState("");
-    const [etherscanData, setEtherscanData] = useState(null);
 
     // This function monitors if the user has updated the input field
     const onInputChange = (e) => {
@@ -71,7 +70,6 @@ export default function App() {
 
     /**
      * This function searches for a transaction hash in Etherscan
-     * and sets the meme based on the result
      */
     const searchTransaction = () => {
         console.log("Searching for transaction hash: ", selectedAddress);
@@ -79,9 +77,44 @@ export default function App() {
         // Returns the list of transactions performed by an address
         const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${selectedAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${etherscan_api_key}`;
         const data = fetch(url).then((res) => res.json());
-        data.then((data) => {
-            setEtherscanData(data);
-        });
+        return data;
+    };
+
+    /** This function determines whether:
+     * 1. The author of the transaction is the logged in address, or
+     * 2. The logged in address sent/received a transaction, or
+     * 3. The logged in address is not involved in the transaction at all
+     *
+     * It gets information about the transaction from Etherscan
+     */
+    const getTransactionInfo = async () => {
+        // Search for the transaction hash in Etherscan asynchonously
+        const etherscanData = await searchTransaction();
+
+        // If selectedAddress is loggedAddress, then the author of the transaction is loggedAddress
+        if (selectedAddress === loggedAddress) {
+            console.log("The author of the transaction is loggedAddress");
+        } else {
+            // If the loggedAddress is not the author of the transaction, then check if they sent/received a transaction
+            // Get the list of transactions performed by the loggedAddress
+            const senders = etherscanData.result.map((transaction) => {
+                return transaction.from;
+            });
+
+            // Get the list of transactions received by the loggedAddress
+            const receivers = etherscanData.result.map((transaction) => {
+                return transaction.to;
+            });
+
+            // Conditionals
+            if (senders.includes(loggedAddress)) {
+                console.log("loggedAddress sent a transaction");
+            } else if (receivers.includes(loggedAddress)) {
+                console.log("loggedAddress received a transaction");
+            } else {
+                console.log("loggedAddress is not involved in the transaction");
+            }
+        }
     };
 
     // Whenever the page loads, check to see if the user has connected their wallet
@@ -119,10 +152,16 @@ export default function App() {
                             />
                             <button
                                 className="button"
+                                onClick={getTransactionInfo}
+                            >
+                                Get Transaction Info
+                            </button>
+                            {/* <button
+                                className="button"
                                 onClick={searchTransaction}
                             >
                                 Search
-                            </button>
+                            </button> */}
                         </div>
                     </>
                 ) : (
@@ -131,48 +170,45 @@ export default function App() {
                     </button>
                 )}
 
-                {/* Display transaction history */}
-                {etherscanData && (
-                    etherscanData && (
-                        <div className="tableContainer">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Block Number</th>
-                                        <th>From</th>
-                                        <th>To</th>
-                                        <th>Value (ETH)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* get the first 5 */}
-                                    {etherscanData.result
-                                        .slice(0, 5)
-                                        .map((tx) => (
-                                            <tr key={tx.hash}>
-                                                <td>{tx.blockNumber}</td>
-                                                <td>
-                                                    {tx.from.slice(0, 6)}...
-                                                    {tx.from.slice(-4)}
-                                                </td>
-                                                <td>
-                                                    {tx.to.slice(0, 6)}...
-                                                    {tx.to.slice(-4)}
-                                                </td>
-                                                <td>
-                                                    {parseFloat(
-                                                        tx.value /
-                                                            1000000000000000000
-                                                    ).toFixed(4)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        )
-                    )
-                }
+                {/* Display transaction history - not used anymore */}
+                {/* {etherscanData && (
+                    <div className="tableContainer">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Block Number</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Value (ETH)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {etherscanData.result
+                                    .slice(-5)
+                                    .reverse()
+                                    .map((tx) => (
+                                        <tr key={tx.hash}>
+                                            <td>{tx.blockNumber}</td>
+                                            <td>
+                                                {tx.from.slice(0, 6)}...
+                                                {tx.from.slice(-4)}
+                                            </td>
+                                            <td>
+                                                {tx.to.slice(0, 6)}...
+                                                {tx.to.slice(-4)}
+                                            </td>
+                                            <td>
+                                                {parseFloat(
+                                                    tx.value /
+                                                        1000000000000000000
+                                                ).toFixed(4)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )} */}
             </div>
         </main>
     );
