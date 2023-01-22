@@ -24,7 +24,7 @@ export default function App() {
 
     // This function monitors if the user has updated the input field
     const onInputChange = (e) => {
-        console.log(e.target.value);
+        // console.log(e.target.value);
         setSelectedAddress(e.target.value);
     };
 
@@ -86,7 +86,7 @@ export default function App() {
     const etherscan_api_key = import.meta.env.VITE_ETHERSCAN_API_KEY;
 
     /**
-     * This function searches for a transaction hash in Etherscan and determines whether:
+     * This function searches for an address in Etherscan and determines whether:
      * 1. The author of the transaction is the logged in address, or
      * 2. The logged in address sent/received a transaction, or
      * 3. The logged in address is not involved in the transaction at all
@@ -96,15 +96,15 @@ export default function App() {
     const getTransactionInfo = async () => {
         // If the selectedAddress is empty, display an error message
         if (selectedAddress === "") {
-            setMemeAlt("Please enter a transaction hash!");
+            setMemeAlt("Please enter an address!");
             setMeme(binary);
             return;
         }
 
-        // Get the transaction hash from the input field
-        console.log("Searching for transaction hash: ", selectedAddress);
+        // Get the address from the input field
+        console.log("Searching for address: ", selectedAddress);
 
-        // Returns the list of transactions performed by an address
+        // Get a list of 'Normal' Transactions By Address on the sepolia testnet
         const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${selectedAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${etherscan_api_key}`;
         const response = await fetch(url).then((res) => res.json());
         console.log("📡 Data retrieved:", response);
@@ -112,16 +112,24 @@ export default function App() {
         // Set the data in our state
         setEtherscanData(response);
 
-        // If the transaction hash is invalid, display an error message
         if (response.status === "0") {
-            setMemeAlt("Invalid transaction hash!");
-            setMeme(binary);
-            return;
+            // default value for both scenarios
+            // 1. The address is invalid
+            // 2. The address has no transactions
+            setEtherscanData(null);
+
+            // Invalid address
+            if (response.message === "NOTOK") {
+                setMemeAlt("Invalid address!");
+                setMeme(binary);
+                return;
+            }
         }
+            
 
         // If selectedAddress is loggedAddress, then the author of the transaction is loggedAddress
         if (selectedAddress === loggedAddress) {
-            setMemeAlt("The author is this address!");
+            setMemeAlt("You are the owner of the selected address!");
             setMeme(onchain);
         } else {
             // If the loggedAddress is not the author of the transaction, then check if they sent/received a transaction
@@ -137,14 +145,14 @@ export default function App() {
 
             // Conditionals
             if (senders.includes(loggedAddress)) {
-                setMemeAlt("This address has once sent a transaction!");
+                setMemeAlt("You once sent a transaction to the selected address!");
                 setMeme(shippor);
             } else if (receivers.includes(loggedAddress)) {
-                setMemeAlt("This address has once received a transaction!");
+                setMemeAlt("You once received a transaction from the selected address!");
                 setMeme(shippor);
             } else {
                 setMemeAlt(
-                    "This address is not involved in any of the transactions!"
+                    "You were not involved in any of the transactions!"
                 );
                 setMeme(imagine);
             }
@@ -165,7 +173,7 @@ export default function App() {
                     Transaction-based Memes
                 </div>
                 <div className="description">
-                    Input a transaction hash to see the meme associated with it.
+                    Input an address to see the meme associated with it.
                 </div>
 
                 {/*
@@ -179,19 +187,19 @@ export default function App() {
                             {loggedAddress.slice(-4)}
                             {/* {loggedAddress} */}
                         </div>
-                        {/* Input field for transaction hash once wallet is connected */}
+                        {/* Input field for address once wallet is connected */}
                         <div className="inputContainer">
                             <input
                                 className="input"
                                 type="text"
-                                placeholder="Enter transaction hash"
+                                placeholder="Enter address"
                                 onChange={onInputChange}
                             />
                             <button
                                 className="button"
                                 onClick={getTransactionInfo}
                             >
-                                Get Transaction Info
+                                Get transactions info
                             </button>
                             {/* <button
                                 className="button"
@@ -207,8 +215,16 @@ export default function App() {
                     </button>
                 )}
 
+                {/* Display the meme if hash found */}
+                {meme && (
+                    <div className="memeContainer">
+                        <div className="memeAlt">{memeAlt}</div>
+                        <img className="meme" src={meme} />
+                    </div>
+                )}
+
                 {/* Display transaction history - not used anymore */}
-                {etherscanData && (
+                {etherscanData ? (
                     <div className="tableContainer">
                         <table className="table">
                             <thead>
@@ -245,14 +261,8 @@ export default function App() {
                             </tbody>
                         </table>
                     </div>
-                )}
-
-                {/* Display the meme if hash found */}
-                {meme && (
-                    <div className="memeContainer">
-                        <img className="meme" src={meme} />
-                        <div className="memeAlt">{memeAlt}</div>
-                    </div>
+                ) : (
+                    <p>No transactions found... yet</p>
                 )}
             </div>
         </main>
