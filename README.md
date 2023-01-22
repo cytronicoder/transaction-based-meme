@@ -1,3 +1,9 @@
+# Transcation-based Meme
+
+## Description
+
+I built a web3 login page that shows 1 of 3 different memes depending on who's viewing it on the Sepolia testnet. This project is the final iteration of this [Replit bounty](https://replit.com/bounties/@timgrote/web-3-login-page-wit) and is built with React.
+
 ## Running React on Repl.it
 
 [React](https://reactjs.org/) is a popular JavaScript library for building user interfaces.
@@ -7,6 +13,7 @@
 Using the two in conjunction is one of the fastest ways to build a web app.
 
 ### Getting Started
+
 - Hit run
 - Edit [App.jsx](#src/App.jsx) and watch it live update!
 
