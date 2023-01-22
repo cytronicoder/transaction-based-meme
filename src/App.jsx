@@ -200,14 +200,6 @@ export default function App() {
                                 Search
                             </button> */}
                         </div>
-
-                        {/* Display the meme if hash found */}
-                        {meme && (
-                            <div className="memeContainer">
-                                <img className="meme" src={meme} />
-                                <div className="memeAlt">{memeAlt}</div>
-                            </div>
-                        )}
                     </>
                 ) : (
                     <button className="button" onClick={connectWallet}>
@@ -216,7 +208,7 @@ export default function App() {
                 )}
 
                 {/* Display transaction history - not used anymore */}
-                {/* {etherscanData && (
+                {etherscanData && (
                     <div className="tableContainer">
                         <table className="table">
                             <thead>
@@ -253,7 +245,15 @@ export default function App() {
                             </tbody>
                         </table>
                     </div>
-                )} */}
+                )}
+
+                {/* Display the meme if hash found */}
+                {meme && (
+                    <div className="memeContainer">
+                        <img className="meme" src={meme} />
+                        <div className="memeAlt">{memeAlt}</div>
+                    </div>
+                )}
             </div>
         </main>
     );
