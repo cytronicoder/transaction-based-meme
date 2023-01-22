@@ -3,12 +3,18 @@ import "./App.css";
 
 import shippor from "./assets/shippor.jpeg";
 import binary from "./assets/binary.png";
+import onchain from "./assets/onchain.jpeg";
 import optimisation from "./assets/optimisation.jpeg";
 
 export default function App() {
+    // This state stores the user's wallet address and the address they input
     const [loggedAddress, setLoggedAddress] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("");
 
+    // This state stores the data returned by Etherscan
+    const [etherscanData, setEtherscanData] = useState(null);
+
+    // This state stores the meme to be displayed and its alt text
     const [meme, setMeme] = useState(null);
     const [memeAlt, setMemeAlt] = useState("");
 
@@ -76,18 +82,7 @@ export default function App() {
     const etherscan_api_key = import.meta.env.VITE_ETHERSCAN_API_KEY;
 
     /**
-     * This function searches for a transaction hash in Etherscan
-     */
-    const searchTransaction = () => {
-        console.log("Searching for transaction hash: ", selectedAddress);
-
-        // Returns the list of transactions performed by an address
-        const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${selectedAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${etherscan_api_key}`;
-        const data = fetch(url).then((res) => res.json());
-        return data;
-    };
-
-    /** This function determines whether:
+     * This function searches for a transaction hash in Etherscan and determines whether:
      * 1. The author of the transaction is the logged in address, or
      * 2. The logged in address sent/received a transaction, or
      * 3. The logged in address is not involved in the transaction at all
@@ -95,13 +90,28 @@ export default function App() {
      * It gets information about the transaction from Etherscan
      */
     const getTransactionInfo = async () => {
-        // Search for the transaction hash in Etherscan asynchonously
-        const etherscanData = await searchTransaction();
+        // Get the transaction hash from the input field
+        console.log("Searching for transaction hash: ", selectedAddress);
+
+        // Returns the list of transactions performed by an address
+        const url = `https://api-sepolia.etherscan.io/api?module=account&action=txlist&address=${selectedAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${etherscan_api_key}`;
+        const response = await fetch(url).then((res) => res.json());
+        console.log("📡 Data retrieved:", response);
+
+        // Set the data in our state
+        setEtherscanData(response);
+        
+        // If the transaction hash is invalid, display an error message
+        if (response.status === "0") {
+            setMemeAlt("Invalid transaction hash!");
+            setMeme(binary);
+            return;
+        }
 
         // If selectedAddress is loggedAddress, then the author of the transaction is loggedAddress
         if (selectedAddress === loggedAddress) {
             setMemeAlt("The author is this address!");
-            setMeme(optimisation);
+            setMeme(onchain);
         } else {
             // If the loggedAddress is not the author of the transaction, then check if they sent/received a transaction
             // Get the list of transactions performed by the loggedAddress
@@ -123,7 +133,7 @@ export default function App() {
                 setMeme(shippor);
             } else {
                 setMemeAlt("This address is not involved in any of the transactions!");
-                setMeme(binary);
+                setMeme(optimisation);
             }
         }
     };
