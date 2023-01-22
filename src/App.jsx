@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+// Logo
+import logo from "./assets/logo.png";
+
+// Memes
 import shippor from "./assets/shippor.jpeg";
 import binary from "./assets/binary.png";
 import onchain from "./assets/onchain.jpeg";
-import optimisation from "./assets/optimisation.jpeg";
+import imagine from "./assets/imagine.jpeg";
 
 export default function App() {
     // This state stores the user's wallet address and the address they input
@@ -90,6 +94,13 @@ export default function App() {
      * It gets information about the transaction from Etherscan
      */
     const getTransactionInfo = async () => {
+        // If the selectedAddress is empty, display an error message
+        if (selectedAddress === "") {
+            setMemeAlt("Please enter a transaction hash!");
+            setMeme(binary);
+            return;
+        }
+
         // Get the transaction hash from the input field
         console.log("Searching for transaction hash: ", selectedAddress);
 
@@ -100,7 +111,7 @@ export default function App() {
 
         // Set the data in our state
         setEtherscanData(response);
-        
+
         // If the transaction hash is invalid, display an error message
         if (response.status === "0") {
             setMemeAlt("Invalid transaction hash!");
@@ -132,8 +143,10 @@ export default function App() {
                 setMemeAlt("This address has once received a transaction!");
                 setMeme(shippor);
             } else {
-                setMemeAlt("This address is not involved in any of the transactions!");
-                setMeme(optimisation);
+                setMemeAlt(
+                    "This address is not involved in any of the transactions!"
+                );
+                setMeme(imagine);
             }
         }
     };
@@ -147,7 +160,10 @@ export default function App() {
         <main>
             <div className="container">
                 {/* Header + description */}
-                <div className="header">Transaction-based Memes</div>
+                <div className="header">
+                    <img className="logo" src={logo} alt="logo" />
+                    Transaction-based Memes
+                </div>
                 <div className="description">
                     Input a transaction hash to see the meme associated with it.
                 </div>

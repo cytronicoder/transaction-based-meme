@@ -18,6 +18,12 @@ main {
     font-weight: bold;
 }
 
+.logo {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
 .description {
     margin-top: 25px;
 }
@@ -32,6 +38,11 @@ main {
     color: white;
     font-weight: bold;
     background-image: linear-gradient(144deg, #509624, #20672c);
+}
+
+.button:hover {
+    transition: transform 0.2s;
+    transform: scale(1.05);
 }
 
 /* Account box matching with the Replit badge */
