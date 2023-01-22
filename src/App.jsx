@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+import shippor from "./assets/shippor.jpeg";
+import binary from "./assets/binary.png";
+import optimisation from "./assets/optimisation.jpeg";
+
 export default function App() {
-    const [loggedAddress, setLoggedAddress] = useState(null);
+    const [loggedAddress, setLoggedAddress] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("");
+
+    const [meme, setMeme] = useState(null);
+    const [memeAlt, setMemeAlt] = useState("");
 
     // This function monitors if the user has updated the input field
     const onInputChange = (e) => {
@@ -93,7 +100,8 @@ export default function App() {
 
         // If selectedAddress is loggedAddress, then the author of the transaction is loggedAddress
         if (selectedAddress === loggedAddress) {
-            console.log("The author of the transaction is loggedAddress");
+            setMemeAlt("The author is this address!");
+            setMeme(optimisation);
         } else {
             // If the loggedAddress is not the author of the transaction, then check if they sent/received a transaction
             // Get the list of transactions performed by the loggedAddress
@@ -108,11 +116,14 @@ export default function App() {
 
             // Conditionals
             if (senders.includes(loggedAddress)) {
-                console.log("loggedAddress sent a transaction");
+                setMemeAlt("This address has once sent a transaction!");
+                setMeme(shippor);
             } else if (receivers.includes(loggedAddress)) {
-                console.log("loggedAddress received a transaction");
+                setMemeAlt("This address has once received a transaction!");
+                setMeme(shippor);
             } else {
-                console.log("loggedAddress is not involved in the transaction");
+                setMemeAlt("This address is not involved in any of the transactions!");
+                setMeme(binary);
             }
         }
     };
@@ -163,6 +174,14 @@ export default function App() {
                                 Search
                             </button> */}
                         </div>
+
+                        {/* Display the meme if hash found */}
+                        {meme && (
+                            <div className="memeContainer">
+                                <img className="meme" src={meme} />
+                                <div className="memeAlt">{memeAlt}</div>
+                            </div>
+                        )}
                     </>
                 ) : (
                     <button className="button" onClick={connectWallet}>
